@@ -1,5 +1,5 @@
 
-:- module(color,[piece/2]).
+:- module(piece,[piece/2]).
 
 %Descripcion: Predicado que crea una ficha de Conecta4.
 %Dominio: color (string) 
