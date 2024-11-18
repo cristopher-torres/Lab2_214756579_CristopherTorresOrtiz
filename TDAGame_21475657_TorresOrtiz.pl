@@ -10,3 +10,9 @@ game(Player1, Player2, Board, Current-turn, [Player1, Player2, Board, Current-tu
 	current-turn > 0.
 
 
+%Descripcion: Predicado que entrega por pantalla el estado actual del tablero en el juego.
+%Dominio: Game X Board
+%selector
+
+game_get_board(Game, Board):-
+	game_get_board([_, _, Board, _], Game).
