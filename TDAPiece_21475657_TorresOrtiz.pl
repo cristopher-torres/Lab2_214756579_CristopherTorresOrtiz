@@ -5,5 +5,9 @@
 %Dominio: color (string) 
 %Constructor 
 
+color_permitido("red").
+color_permitido("yellow").
+
 piece(Color, [Color]):-
-	string(Color).
+	string(Color),
+	color_permitido(Color).

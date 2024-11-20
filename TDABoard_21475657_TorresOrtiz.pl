@@ -21,7 +21,7 @@ can_play([]) :- false.
 
 can_play(Board) :-
     get_row(0, Board, Row), % solo verificare la primera fila, ya que las fichas se colocan en la posicion mas baja, entonces de la unica manera que no se pueda jugar es que en la primera fila no hayan 0.
-    hay_cero(0, Row).
+    my_member(0, Row).
 	
 %Descripcion: Jugar una ficha en el tablero
 %Dominio: Board (board) X Column (int) X Piece (piece) X NewBoard (board)
@@ -34,13 +34,21 @@ play_piece(Board, Column, Piece, NewBoard):-
 	reverse(NewColumn, NewColumn2),
 	actualizar_tablero(Board,Column,NewColumn2, NewBoard).
 	
+%Descripcion: Predicado que permite verificar el estado actual del tablero y entregar el posible ganador que cumple con la regla de conectar 4 fichas de forma vertical. 
+%Dominio: Board (board) X int (1 si gana jugador 1, 2 si gana jugador 2, 0 si no hay ganador vertical).
+%Otros
+
+
+check_vertical_win(Board, Winner):- 
+	check_column(Board, 0, Winner).
+	
 	
 %Descripcion: Predicado que permite verificar si hay un elemento en la fila
 %Dominio: row (list) x X(int)
 %pertenencia
 
 %Hechos
-my_member( X, [X | _ ] ).
+my_member( X, [X | _ ] ):- !.
 
 my_member(X, [ _  | Cola] ):-
     my_member(X, Cola).
@@ -110,3 +118,31 @@ actualizar_fila([X|Cola], Column, Piece, [X|NuevaCola]) :-
     NewColumn is Column - 1,
     actualizar_fila(Cola, NewColumn, Piece, NuevaCola).
 
+%Descripcion: Predicado que cuenta cuantas veces esta un elementos en una lista
+%Dominio: lista (list) X Acc (int) X Elemento (string)
+%predicado auxiliar
+
+winners([], _, _):- fail. %caso base si la lista es vacia
+winners(_, 4, _) :- !.  %caso base si el acumulador llega a 4
+winners([_|Cola], _, Elemento) :-   %caso recursivo si el elemento no es igual al primer elemento de la lista
+    winners(Cola, 0, Elemento).
+
+winners([[Elemento] | Cola ], Acc, Elemento) :-
+    Acc1 is Acc + 1 ,
+    winners(Cola, Acc1, Elemento).
+
+%Descripcion: Predicado que verifica todas las columnas para ver si hay un ganador.
+%Dominio: Board (board) X Column (int) X Winner (int)
+%predicado auxiliar
+
+check_column(_, 7, 0).
+
+check_column(Board, Column, Winner):-
+	Column < 7,
+	get_column(Board, Column, ColumnActual),
+	(winners(ColumnActual, 0, "red") ->
+	Winner = 1 ;
+	winners(ColumnActual, 0, "yellow") ->
+	Winner = 2 ;
+	NewColumn is Column + 1,
+	check_column(Board, NewColumn, Winner)).
