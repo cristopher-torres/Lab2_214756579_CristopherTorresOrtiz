@@ -28,6 +28,7 @@ can_play(Board) :-
 %Modificador
 
 play_piece(Board, Column, Piece, NewBoard):-
+	Column < 7,
 	get_column(Board, Column, PieceColumn),
 	reverse(PieceColumn, ColumnInvert),
 	insertar_piece(Piece, ColumnInvert, NewColumn),
@@ -59,7 +60,9 @@ check_horizontal_win(Board, Winner):-
 	Board = [ _ | Cola],
 	check_horizontal_win(Cola, Winner)).
 
-	
+%Descripcion: Predicado que permite verificar el estado actual del tablero y entregar el posible ganador que cumple con la regla de conectar 4 fichas de forma diagonal. 
+%Dominio: Board (board) X int (1 si gana jugador 1, 2 si gana jugador 2, 0 si no hay ganador vertical).
+%Otros	
 	
 %Descripcion: Predicado que permite verificar si hay un elemento en la fila
 %Dominio: row (list) x X(int)
@@ -164,3 +167,12 @@ check_column(Board, Column, Winner):-
 	Winner = 2 ;
 	NewColumn is Column + 1,
 	check_column(Board, NewColumn, Winner)).
+	
+%Descripcion: Predicado que obtiene un elemento en una fila
+%Dominio: Board (board) X Fila (int) X posicion (int) X Elemento (int)
+%predicado auxiliar
+
+
+obtener_elemento_fila(Board, Fila, posicion, Elemento) :-
+   get_row(Fila, Board, NewFila),
+   get_elemento(NewFila, posicion, Elemento).
