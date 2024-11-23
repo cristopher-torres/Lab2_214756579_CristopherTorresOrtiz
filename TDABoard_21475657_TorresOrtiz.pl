@@ -36,7 +36,8 @@ play_piece(Board, Column, Piece, NewBoard):-
 	actualizar_tablero(Board,Column,NewColumn2, NewBoard).
 	
 %Descripcion: Predicado que permite verificar el estado actual del tablero y entregar el posible ganador que cumple con la regla de conectar 4 fichas de forma vertical. 
-%Dominio: Board (board) X int (1 si gana jugador 1, 2 si gana jugador 2, 0 si no hay ganador vertical).
+%Dominio: Board (board) 
+%Recorrido: int (1 si gana jugador 1, 2 si gana jugador 2, 0 si no hay ganador vertical).
 %Otros
 
 
@@ -46,7 +47,8 @@ check_vertical_win(Board, Winner):-
 
 
 %Descripcion: Predicado que permite verificar el estado actual del tablero y entregar el posible ganador que cumple con la regla de conectar 4 fichas de forma horizontal. 
-%Dominio: Board (board) X int (1 si gana jugador 1, 2 si gana jugador 2, 0 si no hay ganador vertical).
+%Dominio: Board (board)
+%Recorrido: int (1 si gana jugador 1, 2 si gana jugador 2, 0 si no hay ganador horizontal).
 %Otros
 
 check_horizontal_win([], 0).
@@ -61,9 +63,14 @@ check_horizontal_win(Board, Winner):-
 	check_horizontal_win(Cola, Winner)).
 
 %Descripcion: Predicado que permite verificar el estado actual del tablero y entregar el posible ganador que cumple con la regla de conectar 4 fichas de forma diagonal. 
-%Dominio: Board (board) X int (1 si gana jugador 1, 2 si gana jugador 2, 0 si no hay ganador vertical).
+%Dominio: Board (board)
+%Recorrido: int (1 si gana jugador 1, 2 si gana jugador 2, 0 si no hay ganador diagonal).
 %Otros	
 	
+check_diagonal_win(Board, Winner):-
+	check_diagonal(Board, 0, 0, Winner).
+	
+
 %Descripcion: Predicado que permite verificar si hay un elemento en la fila
 %Dominio: row (list) x X(int)
 %pertenencia
@@ -168,11 +175,68 @@ check_column(Board, Column, Winner):-
 	NewColumn is Column + 1,
 	check_column(Board, NewColumn, Winner)).
 	
-%Descripcion: Predicado que obtiene un elemento en una fila
-%Dominio: Board (board) X Fila (int) X posicion (int) X Elemento (int)
+%Descripcion: Predicado que obtiene un elemento en una fila indicada
+%Dominio: Board (board) X Fila (int) X Column (int) X Elemento (int)
 %predicado auxiliar
 
 
-obtener_elemento_fila(Board, Fila, posicion, Elemento) :-
+obtener_elemento_fila(Board, Fila, Column, Elemento) :-
    get_row(Fila, Board, NewFila),
-   get_elemento(NewFila, posicion, Elemento).
+   get_elemento(NewFila, Column, Elemento).
+   
+  
+%Descripcion: Predicado que obtiene la diagonal descendente
+%Dominio: Board (board) X Fila (int) X Column (int) X DiagonalDesc (list)
+%predicado auxiliar
+
+get_diagonal_desc(_, Fila, Column, []) :-   %caso base cuando se sale de los limites de la board
+	(Fila > 5 ; 
+	Column > 6).
+
+get_diagonal_desc(Board, Fila, Column, [X|Cola]):-
+	Fila < 6,
+	Column < 7,
+	obtener_elemento_fila(Board, Fila, Column, X),
+	NewFila is Fila + 1,
+	NewColumn is Column + 1,
+	get_diagonal_desc(Board, NewFila, NewColumn, Cola).
+
+
+%Descripcion: Predicado que obtiene la diagonal ascendente
+%Dominio: Board (board) X Fila (int) X Column (int) X DiagonalAsc (list)
+%predicado auxiliar
+
+get_diagonal_asc(_, Fila, Column, []) :-   %caso base cuando se sale de los limites de la board
+	(Fila < 0 ; 
+	Column > 6).
+
+get_diagonal_asc(Board, Fila, Column, [X|Cola]):-
+	Fila >= 0,
+	Column < 7,
+	obtener_elemento_fila(Board, Fila, Column, X),
+	NewFila is Fila - 1,
+	NewColumn is Column + 1,
+	get_diagonal_asc(Board, NewFila, NewColumn, Cola).
+
+%Descripcion: Predicado que verifica todas las diagonales de todas la posiciones de la board
+%Dominio: Board (board) X Fila (int) X Column (int) X winner (1 gana jugador 1, 2 gana jugador 2, 0 no hay ganador)
+%predicado auxiliar
+
+check_diagonal(_, 6, 0, 0).
+
+check_diagonal(Board, Fila, Column, Winner):-
+	get_diagonal_asc(Board, Fila, Column, DiagonalAsc),
+	get_diagonal_desc(Board, Fila, Column, DiagonalDesc),
+	((winners(DiagonalAsc, 0, "red") ; winners(DiagonalDesc, 0,"red")) ->
+	Winner = 1 ;
+	(winners(DiagonalAsc, 0, "yellow") ; winners(DiagonalDesc, 0, "yellow")) ->
+	Winner = 2 ;
+	( Column > 6 ->
+	NewFila is Fila + 1,
+	NewColumn = 0 ,
+	check_diagonal(Board, NewFila, NewColumn, Winner);
+	NewColumn is Column + 1,
+	NewFila = Fila,
+	check_diagonal(Board, NewFila, NewColumn, Winner))).
+
+
