@@ -1,5 +1,7 @@
 
+:- module(board, [board/1,can_play/1,play_piece/4,check_vertical_win/2,check_horizontal_win/2, check_diagonal_win/2, who_is_winner/2]).
 :- use_module("TDAPiece_21475657_TorresOrtiz.pl").
+
 
 %Descripcion: Crear un tablero de Conecta4.
 %Dominio: no aplica
@@ -17,7 +19,7 @@ board([[0, 0, 0, 0, 0, 0, 0],
 %otros
 
 %hechos
-can_play([]) :- false.
+can_play([]) :- fail.
 
 can_play(Board) :-
     get_row(0, Board, Row), % solo verificare la primera fila, ya que las fichas se colocan en la posicion mas baja, entonces de la unica manera que no se pueda jugar es que en la primera fila no hayan 0.
@@ -70,6 +72,18 @@ check_horizontal_win(Board, Winner):-
 check_diagonal_win(Board, Winner):-
 	check_diagonal(Board, 0, 0, Winner).
 	
+
+%Descripcion: Predicado que permite verificar el estado actual del tablero y entregar el posible ganador que cumple con la regla de conectar 4 fichas de cualquier forma. 
+%Dominio: Board (board)
+%Recorrido: int (1 si gana jugador 1, 2 si gana jugador 2, 0 si no hay ganador diagonal).
+%Otros
+
+who_is_winner(Board, Winner):-
+	((check_vertical_win(Board, 1) ; check_horizontal_win(Board, 1); check_diagonal_win(Board, 1)) ->
+	Winner = 1;
+	((check_vertical_win(Board, 2) ; check_horizontal_win(Board, 2); check_diagonal_win(Board, 2)) ->
+	Winner = 2;
+	Winner= 0)).
 
 %Descripcion: Predicado que permite verificar si hay un elemento en la fila
 %Dominio: row (list) x X(int)

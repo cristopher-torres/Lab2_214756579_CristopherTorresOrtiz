@@ -1,4 +1,6 @@
 
+:- module(player,[player/8]).
+
 %Descripcion: Predicado que permite crear un jugador.
 %Dominio: id (int) X name (string) X color (string) X wins (int) X losses (int) X draws (int) X remaining_pieces (int) X Player
 %Constructor 
