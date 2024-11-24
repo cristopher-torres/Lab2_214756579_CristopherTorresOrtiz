@@ -1,7 +1,6 @@
 
-:- use_module("TDAPlayer_21475657_TorresOrtiz.pl").
-:- use_module("TDABoard_21475657_TorresOrtiz.pl").
-:- use_module("TDAPiece_21475657_TorresOrtiz.pl").
+
+:- module(game, [game/5, is_draw/1, game_get_board/2,get_player1/2, get_player2/2]).
 
 %Descripcion: Predicado que permite crear una nueva partida.
 %Dominio: player1 (player) X player2 (player) X board (board) X currentTurn (int).

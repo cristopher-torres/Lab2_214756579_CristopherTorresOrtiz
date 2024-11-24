@@ -1,6 +1,5 @@
 
-:- module(board, [board/1,can_play/1,play_piece/4,check_vertical_win/2,check_horizontal_win/2, check_diagonal_win/2, who_is_winner/2]).
-:- use_module("TDAPiece_21475657_TorresOrtiz.pl").
+:- module(board, [board/1,can_play/1,play_piece/4,check_vertical_win/2,check_horizontal_win/2, check_diagonal_win/2, who_is_winner/2, my_member/2,get_row/3, get_column/3,get_elemento/3, insertar_piece/3, actualizar_tablero/4, actualizar_fila/4, winners/3, check_column/3, obtener_elemento_fila/4, get_diagonal_asc/4, get_diagonal_desc/4, check_diagonal/4]).
 
 
 %Descripcion: Crear un tablero de Conecta4.
