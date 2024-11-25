@@ -22,7 +22,9 @@ can_play([]) :- fail.
 
 can_play(Board) :-
     get_row(0, Board, Row), % solo verificare la primera fila, ya que las fichas se colocan en la posicion mas baja, entonces de la unica manera que no se pueda jugar es que en la primera fila no hayan 0.
-    my_member(0, Row).
+    my_member(0, Row),
+	who_is_winner(Board, Winner),
+	Winner = 0.
 	
 %Descripcion: Jugar una ficha en el tablero
 %Dominio: Board (board) X Column (int) X Piece (piece) X NewBoard (board)
@@ -102,7 +104,7 @@ my_member(X, [ _  | Cola] ):-
 get_row(0, [Row | _ ], Row).  
 
 get_row(N, [ _ | Tail ], Row) :-
-    N >= 1,
+    N >= 0,
     NewN is N - 1,             
     get_row(NewN, Tail, Row).
 	
@@ -123,7 +125,7 @@ get_column([Fila|Cola], N, [Dato|Column]):-
 get_elemento([X|_], 0, X).
 
 get_elemento([_|Cola], I, X):-
-    I >= 1, 
+    I >= 0, 
     I1 is I - 1, 
     get_elemento(Cola, I1, X). 
 	
@@ -155,7 +157,7 @@ actualizar_tablero([Fila|ColaBoard], Column, [Piece|ColaColumna], [NuevaFilaBoar
 
 actualizar_fila([_|Cola], 0, Piece, [Piece|Cola]).
 actualizar_fila([X|Cola], Column, Piece, [X|NuevaCola]) :-
-    Column >= 1,
+    Column >= 0,
     NewColumn is Column - 1,
     actualizar_fila(Cola, NewColumn, Piece, NuevaCola).
 
