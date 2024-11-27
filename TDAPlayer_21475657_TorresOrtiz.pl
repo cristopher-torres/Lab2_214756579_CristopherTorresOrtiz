@@ -11,7 +11,8 @@ player(Id, Name, Color, Wins, Losses, Draws, Remaining_pieces, [Id,Name,Color,Wi
     integer(Wins),
 	integer(Losses),
 	integer(Draws),
-	integer(Remaining_pieces).
+	integer(Remaining_pieces),
+	Remaining_pieces < 22.
 
 %Descripcion: Predicado que obtiene las fichas del jugador
 %Dominio: Player X Remaining_pieces
