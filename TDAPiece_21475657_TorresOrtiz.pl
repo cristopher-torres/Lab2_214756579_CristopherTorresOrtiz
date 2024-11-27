@@ -2,7 +2,9 @@
 :- module(piece,[piece/2, color_permitido/1]).
 
 %Descripcion: Predicado que crea una ficha de Conecta4.
-%Dominio: color (string) 
+%Dominio: color (string)
+%Meta primaria: piece/2
+%Meta secundaria: color_permitido/1.
 %Constructor 
 
 color_permitido("red").

@@ -3,6 +3,7 @@
 
 %Descripcion: Predicado que permite crear una nueva partida.
 %Dominio: player1 (player) X player2 (player) X board (board) X currentTurn (int).
+%Meta primaria: game/5.
 %Constructor 
 
 game(Player1, Player2, Board, CurrentTurn, [Player1, Player2, Board, CurrentTurn]):-
@@ -11,6 +12,8 @@ game(Player1, Player2, Board, CurrentTurn, [Player1, Player2, Board, CurrentTurn
 
 %Descripcion: Predicado que verifica si el estado actual del juego es empate.
 %Dominio: game (game)
+%Meta primaria: is_draw/1.
+%Meta secundaria: get_player1/2, get_player2/2, get_remaining_pieces/2, game_get_board/2, get_row/3, who_is_winner/2, can_play/1
 %Otros
 
 is_draw(Game):-
@@ -19,12 +22,16 @@ is_draw(Game):-
 	get_remaining_pieces(Player1, Remaining_pieces_player1),
 	get_remaining_pieces(Player2, Remaining_pieces_player2),
 	game_get_board(Game, Board),
-	get_row(0, Board, Row),
-	((Remaining_pieces_player1 = 0, Remaining_pieces_player2 = 0) ; \+ my_member(0,Row)).
+	who_is_winner(Board, Winner),
+	Winner == 0,
+	(\+ can_play(Board) ;(Remaining_pieces_player1 == 0, Remaining_pieces_player2 == 0)).
+	
 
 %Descripcion: Predicado que obtiene el jugador cuyo turno está en curso.
 %Dominio: Game 
 %Recorrido: Player
+%Meta primaria: get_current_player/2
+%Meta secundaria: get_current_turn/2, get_player1/2, get_player2/2
 %selector
 
 get_current_player(Game, CurrentPlayer):-
@@ -38,6 +45,8 @@ get_current_player(Game, CurrentPlayer):-
 
 %Descripcion: Predicado que entrega por pantalla el estado actual del tablero en el juego.
 %Dominio: Game X Board
+%Meta primaria: game_get_board/2
+%Meta secundaria: game/5
 %selector
 
 game_get_board(Game, Board):-
@@ -45,6 +54,8 @@ game_get_board(Game, Board):-
 	
 %Descripcion: Predicado finaliza el juego actualizando las estadísticas de los jugadores según el resultado.
 %Dominio: Game (game) X Game
+%Meta primaria: end_game/2
+%Meta secundaria: get_player1/2, get_player2/2, game_get_board/2, get_current_player/2, update_stats/2, game/5.
 %Modificador
 
 end_game(Game, EndedGame):-
@@ -59,6 +70,9 @@ end_game(Game, EndedGame):-
 %Descripcion: Predicado que realiza un movimiento.
 %Dominio: game (game) X player (player) X column (int).
 %Recorrido: game
+%Meta primaria: player_play/4.
+%Meta secundaria: get_current_player/2, game_get_board/2, who_is_winner/2, is_draw/1, get_id/2, play_piece/4, get_player1/2, get_player2/2, get_current_turn/2, updated_player/5,game/5, end_game/2.
+%Declarativa
 %Modificador
 
 player_play(Game, Player, Column, NewGame) :-
@@ -87,8 +101,13 @@ player_play(Game, Player, Column, NewGame) :-
 	; NewGame = CurrentNewGame)).	
 	
 
+%---------------------------------------------------------------------------------------------
+
+
 %Descripcion: Predicado que obtiene el player1 de game
 %Dominio: Game X Player1
+%Meta primaria: get_player1/2
+%Meta secundaria: game/5
 %selector
 
 get_player1(Game, Player1):-
@@ -96,6 +115,8 @@ get_player1(Game, Player1):-
 
 %Descripcion: Predicado que obtiene el player2 de game
 %Dominio: Game X Player2
+%Meta primaria: get_player2/2
+%Meta secundaria: game/5
 %selector
 
 get_player2(Game, Player2):-
@@ -103,6 +124,8 @@ get_player2(Game, Player2):-
 	
 %Descripcion: Predicado que obtiene el currentTurn del game
 %Dominio: Game X CurrentTurn
+%Meta primaria: get_current_turn/2
+%Meta secundaria: game/5
 %selector
 
 get_current_turn(Game, CurrentTurn):-
@@ -110,6 +133,8 @@ get_current_turn(Game, CurrentTurn):-
 
 %Descripcion: Predicado que permite quitar una ficha al jugador que haya puesto una ficha.
 %Dominio:  Player1 X Player2 X Player X NewPlayer1 X NewPlayer2
+%Meta primaria: updated_player/5
+%Meta secundaria: get_id/2, get_color/2, get_name/2, get_wins/2, get_losses/2, get_draws/2, get_remaining_pieces/2, player/8.
 %auxiliar
 	
 updated_player(Player1, Player2, Player, NewPlayer1, NewPlayer2):-
