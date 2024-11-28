@@ -155,8 +155,8 @@ updated_player(Player1, Player2, Player, NewPlayer1, NewPlayer2):-
     get_id(Player, Id),
     (Id == Id1 ->  
 	(NewRemaining_pieces1 is Remaining_pieces1 - 1, 
-    player(Id1, Name1, Color1, Wins1, Losses1, Draws1, NewRemaining_pieces1, NewPlayer1), 
-    player(Id2, Name2, Color2, Wins2, Losses2, Draws2, Remaining_pieces2, NewPlayer2))
+    NewPlayer1 = [Id1, Name1, Color1, Wins1, Losses1, Draws1, NewRemaining_pieces1],
+    NewPlayer2 = [Id2, Name2, Color2, Wins2, Losses2, Draws2, Remaining_pieces2])
     ;(NewRemaining_pieces2 is Remaining_pieces2 - 1, 
-    player(Id1, Name1, Color1, Wins1, Losses1, Draws1, Remaining_pieces1, NewPlayer1),
-    player(Id2, Name2, Color2, Wins2, Losses2, Draws2, NewRemaining_pieces2, NewPlayer2))).
+    NewPlayer1 = [Id1, Name1, Color1, Wins1, Losses1, Draws1, Remaining_pieces1],
+    NewPlayer2 = [Id2, Name2, Color2, Wins2, Losses2, Draws2, NewRemaining_pieces2])).
