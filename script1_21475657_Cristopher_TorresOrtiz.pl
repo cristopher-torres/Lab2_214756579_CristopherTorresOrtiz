@@ -65,7 +65,7 @@ write(CurrentPlayer2),
 nl,
 
 write('¿Es empate? '),
-is_draw(G15),            %dara false
+is_draw(G20),            
 nl,
 
 write('Verificación de victoria vertical: '),
@@ -88,11 +88,19 @@ who_is_winner(FinalBoardGame, Winner),
 write(Winner),
 nl,
 
+write('Historial de movimientos despues de 10 movimientos: '),
+game_history(G10, History10),
+write(History10),
+nl,
 
+write('Historial de movimientos despues de 6 movimientos: '),
+game_history(G6, History6),
+write(History6),
+nl,
 
 end_game(G20, EndedGame),
 
-write('Historial de movimientos: '),
+write('Historial de movimientos de la partida finalizada: '),
 game_history(EndedGame, History),
 write(History),
 nl,
@@ -117,4 +125,5 @@ update_stats(G20, P1, NewStatsPlayer1),
 update_stats(G20, P2, NewStatsPlayer2),
 
 write(NewStatsPlayer1),
-write(NewStatsPlayer2).
+write(NewStatsPlayer2),
+nl.

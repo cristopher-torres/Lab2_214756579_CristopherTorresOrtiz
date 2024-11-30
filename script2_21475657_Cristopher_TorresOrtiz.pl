@@ -82,11 +82,19 @@ who_is_winner(FinalBoardGame, Winner),
 write(Winner),
 nl,
 
+write('Historial de movimientos despues de 8 movimientos: '),
+game_history(G8, History8),
+write(History8),
+nl,
 
+write('Historial de movimientos despues de 4 movimientos: '),
+game_history(G4, History4),
+write(History4),
+nl,
 
 end_game(G14, EndedGame),
 
-write('Historial de movimientos: '),
+write('Historial de movimientos de la partida finalizada: '),
 game_history(EndedGame, History),
 write(History),
 nl,
@@ -112,4 +120,5 @@ update_stats(G14, P1, NewStatsPlayer1),
 update_stats(G14, P2, NewStatsPlayer2),
 
 write(NewStatsPlayer1),
-write(NewStatsPlayer2).
+write(NewStatsPlayer2),
+nl.

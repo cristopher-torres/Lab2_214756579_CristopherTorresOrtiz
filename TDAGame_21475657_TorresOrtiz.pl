@@ -13,7 +13,7 @@ game(Player1, Player2, Board, CurrentTurn, [Player1, Player2, Board, CurrentTurn
 	CurrentTurn > 0.
 	
 
-game(Player1,Player2,Board,CurrentTurn,History,[Player1,Player2,Board,CurrentTurn,History]).  %Se le asigna nombre a la lista vacia
+game(Player1,Player2,Board,CurrentTurn,History,[Player1,Player2,Board,CurrentTurn,History]).  %Se crea un game con la lista vacia que seria el historial
 
 %Descripcion: Predicado que genera un historial de movimientos de la partida.
 %Dominio: game (game) X history (list)
