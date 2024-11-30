@@ -21,13 +21,13 @@ board([[0, 0, 0, 0, 0, 0, 0],
 %otros
 
 %hechos
-can_play([]) :- fail.
+can_play([]) :- fail.       %caso para cuando la board este vacia
 
 can_play(Board) :-
     get_row(0, Board, Row), % solo verificare la primera fila, ya que las fichas se colocan en la posicion mas baja, entonces de la unica manera que no se pueda jugar es que en la primera fila no hayan 0.
     my_member(0, Row),
 	who_is_winner(Board, Winner),
-	Winner == 0.
+	Winner == 0.             %Se verifica que nadie haya ganado, si hay un ganador finaliza la partida
 	
 %Descripcion: Jugar una ficha en el tablero
 %Dominio: Board (board) X Column (int) X Piece (piece) X NewBoard (board)
@@ -65,16 +65,16 @@ check_vertical_win(Board, Winner):-
 %Recursion
 %Otros
 
-check_horizontal_win([], 0).
+check_horizontal_win([], 0).     %Caso para cuando la board este vacia, Winner es 0
 
 check_horizontal_win(Board, Winner):-
-	get_row(0, Board, Row),
+	get_row(0, Board, Row),          %se obtiene la primera fila, y se verifica si hay cuatro fichas consecutivas tanto para "red" como para "yellow"
 	(winners(Row, 0, "red")-> 
 	Winner = 1 ;
 	winners(Row,0, "yellow")->
 	Winner = 2;
 	Board = [ _ | Cola],
-	check_horizontal_win(Cola, Winner)).
+	check_horizontal_win(Cola, Winner)). 
 
 %Descripcion: Predicado que permite verificar el estado actual del tablero y entregar el posible ganador que cumple con la regla de conectar 4 fichas de forma diagonal. 
 %Dominio: Board (board)
@@ -125,7 +125,7 @@ my_member(X, [ _  | Cola] ):-
 %Recursion
 %predicado auxiliar
 
-get_row(0, [Row | _ ], Row).  
+get_row(0, [Row | _ ], Row).     
 
 get_row(N, [ _ | Tail ], Row) :-
     N >= 0,
@@ -164,9 +164,9 @@ get_column([Fila|Cola], N, [Dato|Column]):-
 %Recursion
 %predicado auxiliar
 
-insertar_piece(Piece, [0|Cola], [Piece|Cola]):-!.
+insertar_piece(Piece, [0|Cola], [Piece|Cola]):-!.       %si se encuentra un 0 en la primera posicion se reemplaza por la ficha
 
-insertar_piece( Piece, [Inicio|Cola], [Inicio|Lista] ):-
+insertar_piece( Piece, [Inicio|Cola], [Inicio|Lista] ):-   %Caso cuando no hay un 0 en la posicion actual
     insertar_piece( Piece, Cola, Lista).
 	
 
@@ -176,7 +176,7 @@ insertar_piece( Piece, [Inicio|Cola], [Inicio|Lista] ):-
 %Recursion
 %predicado auxiliar
 
-actualizar_fila([_|Cola], 0, Piece, [Piece|Cola]).
+actualizar_fila([_|Cola], 0, Piece, [Piece|Cola]).          %si el numero de columna llega a 0 ahi se pone la ficha
 actualizar_fila([X|Cola], Column, Piece, [X|NuevaCola]) :-
     Column >= 0,
     NewColumn is Column - 1,
@@ -190,7 +190,7 @@ actualizar_fila([X|Cola], Column, Piece, [X|NuevaCola]) :-
 %Recursion
 %predicado auxiliar
 	
-actualizar_tablero([], _, [], []).
+actualizar_tablero([], _, [], []).  %Si la board esta vacia no se actualiza nada
 
 actualizar_tablero([Fila|ColaBoard], Column, [Piece|ColaColumna], [NuevaFilaBoard|NuevaColaBoard]) :-
     actualizar_fila(Fila, Column, Piece, NuevaFilaBoard),
@@ -205,7 +205,7 @@ actualizar_tablero([Fila|ColaBoard], Column, [Piece|ColaColumna], [NuevaFilaBoar
 
 winners([], _, _):- fail. %caso  si la lista es vacia
 winners(_, 4, _) :- !.  %caso si el acumulador llega a 4
-winners([_|Cola], _, Elemento) :-   %caso si el elemento no es igual a la ficha que se esta evaluando en la lista
+winners([_|Cola], _, Elemento) :-   %caso si la ficha no es igual al elemento que se encuentra en la posicion evaluada de la lista
     winners(Cola, 0, Elemento).
 
 winners([[Elemento] | Cola ], Acc, Elemento) :-
@@ -219,11 +219,11 @@ winners([[Elemento] | Cola ], Acc, Elemento) :-
 %Recursion 
 %predicado auxiliar
 
-check_column(_, 7, 0).
+check_column(_, 7, 0).  %caso para cuando el numero de column se sale de la board
 
 check_column(Board, Column, Winner):-
 	Column < 7,
-	get_column(Board, Column, ColumnActual),
+	get_column(Board, Column, ColumnActual), 	 %se obtiene la columna, y se verifica si hay cuatro fichas consecutivas tanto para "red" como para "yellow"
 	(winners(ColumnActual, 0, "red") ->
 	Winner = 1 ;
 	(winners(ColumnActual, 0, "yellow") ->
@@ -250,7 +250,7 @@ obtener_elemento_fila(Board, Fila, Column, Elemento) :-
 %Recursion 
 %predicado auxiliar
 
-get_diagonal_desc(_, Fila, Column, []) :-   %caso cuando se sale de los limites de la board
+get_diagonal_desc(_, Fila, Column, []) :-   %caso cuando el numero de Fila o columna se salen de la board
 	(Fila > 5 ; 
 	Column > 6).
 
@@ -270,7 +270,7 @@ get_diagonal_desc(Board, Fila, Column, [X|Cola]):-
 %Recursion 
 %predicado auxiliar
 
-get_diagonal_asc(_, Fila, Column, []) :-   %caso cuando se sale de los limites de la board
+get_diagonal_asc(_, Fila, Column, []) :-   %caso cuando el numero de Fila o columna se salen de la board
 	(Fila < 0 ; 
 	Column > 6).
 
@@ -289,20 +289,20 @@ get_diagonal_asc(Board, Fila, Column, [X|Cola]):-
 %Recursion
 %predicado auxiliar
 
-check_diagonal(_, 6, 0, 0).
+check_diagonal(_, 6, 0, 0).   %Caso cuando el numero de fila es mayor al numero de fila de la board
 
 check_diagonal(Board, Fila, Column, Winner):-
 	get_diagonal_asc(Board, Fila, Column, DiagonalAsc),
 	get_diagonal_desc(Board, Fila, Column, DiagonalDesc),
-	((winners(DiagonalAsc, 0, "red") ; winners(DiagonalDesc, 0,"red")) ->
+	((winners(DiagonalAsc, 0, "red") ; winners(DiagonalDesc, 0,"red")) ->			%se obtiene la diagonal asc y desc, y se verifica si hay cuatro fichas consecutivas tanto para "red" como para "yellow"
 	Winner = 1 ;
 	(winners(DiagonalAsc, 0, "yellow") ; winners(DiagonalDesc, 0, "yellow")) ->
 	Winner = 2 ;
-	( Column > 6 ->
+	( Column > 6 ->			%Si la columna es mayor a 6 se pasa a la siguiente fila de la board y column pasa a 0
 	NewFila is Fila + 1,
 	NewColumn = 0 ,
 	check_diagonal(Board, NewFila, NewColumn, Winner);
-	NewColumn is Column + 1,
+	NewColumn is Column + 1,					%y si no es mayor a 6 la columna, se le suma uno a la columna y se mantiene la fila.
 	NewFila = Fila,
 	check_diagonal(Board, NewFila, NewColumn, Winner))).
 

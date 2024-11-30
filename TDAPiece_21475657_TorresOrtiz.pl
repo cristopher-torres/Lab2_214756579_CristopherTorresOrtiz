@@ -7,7 +7,7 @@
 %Meta secundaria: color_permitido/1.
 %Constructor 
 
-color_permitido("red").
+color_permitido("red").			%solo se permiten estos colores
 color_permitido("yellow").
 
 piece(Color, [Color]):-
